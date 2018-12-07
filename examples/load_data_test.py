@@ -31,25 +31,30 @@ def load_data_test():
     # set up graph to run
     with tf.Graph().as_default() as g:
 
+        # set up tensors
         if use_queues:
             features, _ = input_fn()
         else:
             iterator = input_fn().make_one_shot_iterator()
             features, _ = iterator.get_next()
 
-
         # start a sess
         sess, coord, threads = setup_tensorflow_session()
-
-        sess.run(features[DataKeys.FEATURES])
-
-        quit()
+        print features
         
-        results = sess.run([
+        # run
+        (features, labels, metadata) = sess.run([
             features[DataKeys.FEATURES],
-            features[DataKeys.LABELS]])
-        
-        print results
+            features[DataKeys.LABELS],
+            features[DataKeys.SEQ_METADATA]])
+
+        # print shapes to show features
+        print "metadata:", metadata.shape
+        print "features:", features.shape
+        print "labels:", labels.shape
+
+        # one example of metadata read out
+        print "metadata for one example:", str(metadata[0][0])
         
         # close it out
         close_tensorflow_session(coord, threads)

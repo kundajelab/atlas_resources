@@ -96,6 +96,8 @@ def generate_h5_datasets(
     """generate a full h5 dataset
     """
     if True:
+        # TODO(dk) would adjust here to set up a different negative set
+        # from a specified bed file of negatives
         # first select negatives
         training_negatives_bed_file, genomewide_negatives_bed_file = setup_negatives(
             positives_bed_file,
