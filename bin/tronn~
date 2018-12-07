@@ -1,0 +1,248 @@
+#!/usr/bin/env python
+
+"""Description: TRONN main executable
+"""
+
+import os
+import sys
+import json
+import glob
+import logging
+import argparse
+import pkg_resources
+
+from tronn.util.scripts import setup_run_logs
+from tronn.util.scripts import parse_multi_target_selection_strings
+
+
+def parse_args():
+    """Prepare argument parser. Main subcommands are set up here first
+    """
+    parser = argparse.ArgumentParser(
+        description='TRONN: Transcriptional Regulation Optimized Neural Nets')
+    subparsers = parser.add_subparsers(dest='subcommand_name')
+
+    # command for preprocessing data
+    add_preprocess_parser(subparsers)
+
+    # parse args
+    args = parser.parse_args()
+
+    return args
+
+
+def _add_output_args(parser, out_dir="./"):
+    """Add output directory and prefix args to parser
+    """
+    parser.add_argument(
+        "-o", "--out_dir", dest="out_dir", type=str,
+        default=out_dir,
+        help = "Output directory (default: current)")
+    parser.add_argument(
+        '--prefix', required=True,
+        help='prefix to attach onto file names')
+
+    return None
+
+
+def _setup_annotations(args):
+    """load annotation files from json and replace the json
+    file with the dictionary
+    """
+    with open(args.annotations, "r") as fp:
+        annotations = json.load(fp)
+    args.annotations = annotations
+    
+    return None
+
+
+def _parse_files(dataset_key_strings):
+    """given an arg string list, parse out into a dict
+    assumes a format of: key=file1,file2,..::param1=val,param2=val,...
+    """
+    if dataset_key_strings is None:
+        return {}
+
+    key_dict = {}
+    for dataset_key_string in dataset_key_strings:
+        # first split on "::" then on "="
+        key_and_params = dataset_key_string.split("::")
+        
+        # set up key and key items (filenames or indices)
+        key_string = key_and_params[0]
+        key_and_items = key_string.split("=")
+        key = key_and_items[0]
+        if len(key_and_items) == 1:
+            key_items = []
+        else:
+            item_string = key_and_items[1]
+            key_items = [
+                int(val) if _is_integer(val) else val
+                for val in item_string.split(",")]
+            
+        # set up params
+        if len(key_and_params) == 1:
+            params = {}
+        else:
+            param_string = key_and_params[1]
+            params = dict(
+                [param.split("=")
+                 for param in param_string.split(",")])
+            
+        # combine
+        key_dict[key] = (key_items, params)
+    
+    return key_dict
+
+
+def _setup_preprocess(args):
+    """load preprocess files
+    """
+    args.labels = _parse_files(args.labels)
+    args.signals = _parse_files(args.signals)
+
+    return None
+
+
+def add_preprocess_parser(subparsers):
+    """Add data generation function argument parser
+    """
+    argparser_preprocess = subparsers.add_parser(
+        "preprocess",
+        help="Preprocess data into TRONN formats")
+
+    # group for input files
+    group_input = argparser_preprocess.add_argument_group(
+        "Input files and folders")
+    group_input.add_argument(
+        "--annotations", required=True,
+        help="json file of annotation files")
+    group_input.add_argument(
+        "--labels", nargs='+', required=True,
+        help='list of key=files_separated_by_commas::params, files are in BED/narrowPeak format')
+    group_input.add_argument(
+        "--signals", nargs='+',
+        help='list of key=files_separated_by_comma::params, files are in bigwig format')
+    group_input.add_argument(
+        "--master_label_keys", nargs="+", default=[],
+        help="subset of label files to use to make master regions file")
+    group_input.add_argument(
+        "--master_bed_file", default=None,
+        help="master regions file for all examples")
+
+    # group for options
+    group_opts = argparser_preprocess.add_argument_group(
+        "Data generation options")
+    group_opts.add_argument(
+        "--rc", action="store_true",
+        help='Reverse complement')
+    group_opts.add_argument(
+        "--genomewide", action="store_true",
+        help='build examples across whole genome')
+    group_opts.add_argument(
+        "--parallel", default=12, type=int,
+        help='Number of parallel threads to use')
+    
+    # group for output files
+    group_output = argparser_preprocess.add_argument_group(
+        "Output files and folders")
+    _add_output_args(group_output, out_dir="./datasets/dataset")
+    group_output.add_argument(
+        "--tmp_dir", help="directory for tmp files")
+
+    return
+
+
+def _add_dataset_args(parser):
+    """add dataset args
+    """
+    parser.add_argument(
+        "--data_format", default="hdf5",
+        help="dataset storage format (hdf5, bed, custom)")
+    parser.add_argument(
+        "--data_dir",
+        help="h5 file directory")
+    parser.add_argument(
+        "--data_files", nargs="+", default=[],
+        help="dataset files")
+    parser.add_argument(
+        "--fasta",
+        help="fasta file")
+    parser.add_argument(
+        "--dataset_json",
+        help="use a json as input instead. other data args will supersede this json if requested")
+    parser.add_argument(
+        "--targets", nargs="+", default=[],
+        help="which datasets to load as targets (ordered). Expected format: data_key=indices_list_with_commas")
+    parser.add_argument(
+        "--filter_targets", nargs="+", default=[],
+        help="at least 1 of these targets must be POSITIVE. Format: data_key=indices_list_with_commas")
+    parser.add_argument(
+        "--singleton_filter_targets", nargs="+", default=[],
+        help="2 or more of these targets must be POSITIVE. Format: data_key=indices_list_with_commas")
+    parser.add_argument(
+        "--target_indices", nargs="+", default=[], type=int,
+        help="after collection of labels, which of those to finally select. Format: indices_list_with_commas")
+    parser.add_argument(
+        "--dataset_examples", nargs="+", default=[],
+        help="option to throw in specific examples to run")
+
+    return None
+
+
+def _setup_dataset_args(args):
+    """set up dataset options
+    """
+    # first load dataset json if it is given
+    if args.dataset_json is not None:
+        with open(args.dataset_json, "r") as fp:
+            args.dataset_json = json.load(fp)
+    else:
+        args.dataset_json = {}
+
+    # load targets from json if not given
+    if args.targets is None:
+        args.targets = args.dataset_json.get("targets")
+    else:
+        args.targets = parse_multi_target_selection_strings(
+            args.targets)
+
+    # load filter targets from json if not given
+    if args.filter_targets is None:
+        args.filter_targets = args.dataset_json.get("filter_targets")
+    else:
+        args.filter_targets = parse_multi_target_selection_strings(
+            args.filter_targets)
+
+    # if fasta is not given, check dataset json
+    if args.fasta is None:
+        args.fasta = args.dataset_json.get("fasta")
+    
+    return None
+
+
+def main():
+    """Main function for running TRoNN functions
+    """
+    # parse args and set up
+    args = parse_args()
+    args.out_dir = os.path.abspath(args.out_dir)
+    os.system("mkdir -p {}".format(args.out_dir))
+    setup_run_logs(args, args.subcommand_name)
+
+    # get subcommand run function and run
+    subcommand = args.subcommand_name
+
+    if subcommand == "preprocess":
+        _setup_annotations(args)
+        _setup_preprocess(args)
+        from tronn.preprocess_cmd import run
+        run(args)
+
+    # add new commands here
+        
+    return None
+
+
+if __name__ == '__main__':
+    main()
