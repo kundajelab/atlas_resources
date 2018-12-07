@@ -50,5 +50,6 @@ Do a test of data loading
 # in examples folder
 # FYI variety of data loading warnings will pop up if you use latest tensorflow
 python load_gpu_test.py
+python load_generator_test.py
 
 ```
