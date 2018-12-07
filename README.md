@@ -40,7 +40,7 @@ Preprocess datasets, requires you have bedtools (and ucsc_tools if any signals t
 git clone https://github.com/kundajelab/dragonn_benchmark_data.git
 
 # cd to examples dir, adjust DATA and WORK dirs, and run the script
-# produces a set of h5 files, altogether is ~8GB
+# produces a set of h5 files, altogether is ~8GB, takes about 8 min with 24 threads
 source preprocess.bash
 ```
 
@@ -49,6 +49,6 @@ Do a test of data loading
 ```
 # in examples folder
 # FYI variety of data loading warnings will pop up if you use latest tensorflow
-python load_data_test.py
+python load_gpu_test.py
 
 ```

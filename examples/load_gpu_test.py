@@ -15,6 +15,8 @@ def load_data_test():
     data_dir = "/srv/scratch/dskim89/atlas/test.2018-12-06.datalayer/test_dataset/h5"
     fasta = "/mnt/data/annotations/by_release/hg19.GRCh37/hg19.genome.fa"
 
+    # queues is old TF style - they're deprecating but I find it faster than their new tf.data.Dataset
+    # both options are available
     use_queues = True
     
     # set up dataloader
