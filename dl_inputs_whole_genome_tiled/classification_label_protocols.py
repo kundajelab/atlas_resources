@@ -67,14 +67,14 @@ def peak_percent_overlap_with_bin(task_name,task_bed,args):
         peak_length=peak_end-peak_start+1
         min_overlap=int(round(min([peak_length,args.bin_size])*args.overlap_thresh))
 
-        overlap_bin_first_start=int((floor(peak_start-min_overlap)/args.stride)*args.stride)
-        overlap_bin_last_start=peak_end+min_overlap-args.bin_size
+        overlap_bin_first_start=int(ceil(peak_start-min_overlap)/args.stride)*args.stride
+        overlap_bin_last_start=int(floor(peak_end-min_overlap)/args.stride)*args.stride
         for bin_start in range(overlap_bin_first_start,overlap_bin_last_start+1,args.stride ):
             cur_bin=(chrom,bin_start,bin_start+args.bin_size)
             non_zero_bins[cur_bin]=dict()
             non_zero_bins[cur_bin][task_name]='1'
 
         if(args.allow_ambiguous==True): 
-            non_zero_bins=label_ambiguous_bins(chrom,task_name,non_zero_bins,overlap_bin_first_start,overlap_bin_last_start,args)   
+            non_zero_bins=label_ambiguous_bins(chrom,task_name,non_zero_bins,overlap_bin_first_start,overlap_bin_last_start,args)
     return non_zero_bins
 
