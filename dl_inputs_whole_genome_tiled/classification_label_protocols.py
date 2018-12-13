@@ -55,7 +55,6 @@ def peak_summit_near_bin_center(task_name,task_bed,args):
             min_bin_start=min_bin_center_start-topad
             max_bin_start=max_bin_center_start-topad
             non_zero_bins=label_ambiguous_bins(chrom,task_name,non_zero_bins,min_bin_start,max_bin_start,args)
-    print(len(non_zero_bins.keys()))
     return non_zero_bins
 
 def peak_percent_overlap_with_bin(task_name,task_bed,args):
@@ -66,11 +65,10 @@ def peak_percent_overlap_with_bin(task_name,task_bed,args):
         peak_end=int(entry[2])
 
         peak_length=peak_end-peak_start+1
-        min_overlap=min([peak_length,args.overlap_thresh])/2
+        min_overlap=int(round(min([peak_length,args.bin_size])*args.overlap_thresh))
 
-        overlap_bin_first_start=(floor(peak_start-min_overlap)/args.stride)*args.stride
+        overlap_bin_first_start=int((floor(peak_start-min_overlap)/args.stride)*args.stride)
         overlap_bin_last_start=peak_end+min_overlap-args.bin_size
-
         for bin_start in range(overlap_bin_first_start,overlap_bin_last_start+1,args.stride ):
             cur_bin=(chrom,bin_start,bin_start+args.bin_size)
             non_zero_bins[cur_bin]=dict()

@@ -6,7 +6,7 @@ import pdb
 import csv
 from classification_label_protocols import * 
 from multiprocessing.pool import ThreadPool
-
+import gzip 
 
 #Approaches to determining classification labels
 #Others can be added here (imported from classification_label_protocols) 
@@ -52,7 +52,7 @@ def write_output_bed(args,task_names,non_zero_bins):
     task_names - list of unique task names 
     '''
     #open the output file and write the header 
-    outf=open(args.out_bed,'w')
+    outf=gzip.open(args.out_bed,'wt')
     header='\t'.join(['\t'.join(['Chrom','Start','End']),
                       '\t'.join(task_names)])
     outf.write(header+'\n')
@@ -86,7 +86,7 @@ def write_output_bed(args,task_names,non_zero_bins):
                     else:
                         outf.write('\t0')
                 outf.write('\n')
-
+    outf.close()
 def get_nonzero_bins(args,tasks):
     #parallelized bin labeling
     pool=ThreadPool(args.threads)
@@ -127,10 +127,10 @@ def main():
     tasks=pd.read_csv(args.task_list,sep='\t',header=None)
 
     #multi-threaded identification of non-zero bin labels for each task 
-    task_names,non_zero_bins=get_nonzero_bins(args,tasks) 
+    task_names,non_zero_bins_dict=get_nonzero_bins(args,tasks) 
     
     #write the output file
-    write_output_bed(args,task_names,non_zero_bins)
+    write_output_bed(args,task_names,non_zero_bins_dict)
     
 
 if __name__=="__main__":
