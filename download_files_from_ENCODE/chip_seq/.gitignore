@@ -1,1 +1,3 @@
 *.tsv
+data
+download_script.sh

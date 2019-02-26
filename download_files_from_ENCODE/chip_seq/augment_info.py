@@ -9,7 +9,7 @@ augmented_file_name = (
 fh = open(file_name)
 out_fh = open(augmented_file_name, 'w')
 out_fh.write("file_id\tdataset\ttech_reps\tbio_reps\tdownload_url"
-             +"\ttarget_label\tdescription\tbiosample\n")
+             +"\ttarget_label\tbiosample\tdescription\n")
 
 for (i,line) in enumerate(fh):
     if (i > 1):

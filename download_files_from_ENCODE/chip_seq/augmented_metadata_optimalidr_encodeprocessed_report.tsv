@@ -1,4 +1,4 @@
-file_id	dataset	tech_reps	bio_reps	download_url	target_label	description	biosample
+file_id	dataset	tech_reps	bio_reps	download_url	target_label	biosample	description
 /files/ENCFF742LSD/	/experiments/ENCSR024LKA/	3_1,4_1	3,4	/files/ENCFF742LSD/@@download/ENCFF742LSD.bed.gz	HDAC3	K562	HDAC3 ChIP-seq on human K562
 /files/ENCFF007ZUL/	/experiments/ENCSR798ILC/	1_1,2_1	1,2	/files/ENCFF007ZUL/@@download/ENCFF007ZUL.bed.gz	NCOR1	K562	NCOR1 ChIP-seq on human K562
 /files/ENCFF247VVK/	/experiments/ENCSR864KNH/	1_1,2_1	1,2	/files/ENCFF247VVK/@@download/ENCFF247VVK.bed.gz	YBX1	MCF-7	YBX1 ChIP-seq on human MCF-7
