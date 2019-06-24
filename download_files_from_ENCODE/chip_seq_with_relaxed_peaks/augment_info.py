@@ -17,7 +17,7 @@ out_fh.write("file_id"
              +"\tgenome_assembly"
              +"\toutput_type"
              +"\ttechnical_replicates"
-             +"\tbiological_replicates",
+             +"\tbiological_replicates"
              +"\tdownload_url"
              +"\tlinecount"
              +"\ttarget_label"
@@ -103,28 +103,6 @@ for (i,line) in enumerate(fh):
                 print("Mods listed but not in biosample summary")
                 print(biosample_ontology_term_name, modortreat_detected)
                 print(biosample_summary)
-
-out_fh.write("file_id"
-             +"\taccession"
-             +"\tdataset"
-             +"\tgenome_assembly"
-             +"\toutput_type"
-             +"\ttechnical_replicates"
-             +"\tbiological_replicates",
-             +"\tdownload_url"
-             +"\tlinecount"
-             +"\ttarget_label"
-             +"\tbiosample_short_name"
-             +"\tmod_or_treament"
-             +"\tlab"
-             +"\tbiosample_summary"
-             +"\tdescription"
-             +"\tbiosample_accession"
-             +"\tbiosample_ontology_id"
-             +"\tbiosample_treatments"
-             +"\tbiosample_applied_mods"
-             +"\tbiosample_genetic_mods"
-             +"\n")
 
         line_to_write = (
                file_id
