@@ -34,7 +34,7 @@ out_fh.write("file_id"
              +"\n")
 
 for (i,line) in enumerate(fh):
-    if (i > 1):
+    if (i >= 1):
         line = line.rstrip()
         (file_id, accession, dataset, genome_assembly,
          output_type, technical_replicates, biological_replicates,
