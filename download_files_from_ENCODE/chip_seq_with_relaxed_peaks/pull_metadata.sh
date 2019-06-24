@@ -13,12 +13,13 @@ curl -L "https://www.encodeproject.org/report.tsv?type=File&lab.title=ENCODE+Pro
 
 #Go through a sorting step to make the order deterministic (it's not deterministic when pulled from web)
 #Also filter for files that don't use more than one biological replicate
+#Also strip annoying carraige return characters
 
-cat unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp | head -2 > url_and_title.temp
-cat unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp | perl -lane 'if ($. > 2) {print $_}' | perl -F"\t" -lane 'if (length($F[6]) > 1) {print $_}' | sort > sorted_rows.temp
+cat unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp | head -2 | tail -1 | perl -lne '$_ =~ s/\r//g; print $_' > title.temp
+cat unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp | perl -lane 'if ($. > 2) {print $_}' | perl -F"\t" -lane 'if (length($F[6]) > 1) {$_ =~ s/\r//g; print $_}' | sort > sorted_rows.temp
 
-cat url_and_title.temp sorted_rows.temp > metadata_optimalandrelaxedpeaks_encodeprocessed.tsv
+cat title.temp sorted_rows.temp > metadata_optimalandrelaxedpeaks_encodeprocessed.tsv
 
 rm unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp
-rm url_and_title.temp
+rm title.temp
 rm sorted_rows.temp
