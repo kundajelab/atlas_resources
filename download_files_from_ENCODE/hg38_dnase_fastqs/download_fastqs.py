@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np 
 import os 
 import argparse 
-import subprocess 
-import multiprocessing.Threads 
+import subprocess
+from multiprocessing.pool import ThreadPool
 
 def parse_args(): 
     parser=argparse.ArgumentParser(description="intersects the experiments.tsv and files.tsv metadata files to determine fastq files to aggregate for a given experiment")
@@ -16,12 +16,14 @@ def parse_args():
 
 def download_experiment(inputs):
     experiment=inputs[0] 
-    out_dir=inputs[1]
-    contributing_files=inputs[2] 
+    args=inputs[1]
+    contributing_files=inputs[2]
+    
 
     experiment_stripped=experiment.strip('/').split('/')[-1] 
     print("processing:"+str(experiment_stripped))
-    outf='/'.join([out_dir,experiment_stripped+'.fastq.gz'])
+    outf='/'.join([args.out_dir,experiment_stripped+'.fastq.gz'])
+    print(outf) 
     if os.path.exists(outf): 
         if args.overwrite==False: 
             return "done!"
@@ -30,9 +32,13 @@ def download_experiment(inputs):
             print("warning! you are overwriting:"+outf)
     for index,row in contributing_files.iterrows(): 
         #get the file url 
-        cur_url="https://www.encodeproject.org"+row['Download URL']
-        #append the contents of the fastq.gz file to existing output file 
-        completed_download=subprocess.run(['curl',curl_url,'>>',outf])
+        curl_url="https://www.encodeproject.org"+row['Download URL']
+        print(curl_url) 
+        #append the contents of the fastq.gz file to existing output file
+        command=' '.join(['wget',curl_url,'-O','-','>>',outf])
+        print(command)
+        with open(outf,'ab') as f: 
+            completed_download=subprocess.run(['wget',curl_url,'-O','-'],stdout=f)
         completed_download.check_returncode()
     print("done!") 
     return "done!" 
@@ -46,12 +52,6 @@ def main():
     #if the output directory for bam storage does not exist, create it 
     if not os.path.exists(args.out_dir): 
         os.makedirs(args.outdir)     
-    #create sub-directories for unfiltered alignments and alignments (which may also be unfiltered and are used if no unfiltered alignments are specified) 
-    if not os.path.exists('/'.join([args.out_dir,'unfiltered_alignments'])): 
-        os.makedirs('/'.join([args.out_dir,'unfiltered_alignments']))
-    if not os.path.exists('/'.join([args.out_dir,'alignments'])): 
-        os.makedirs('/'.join([args.out_dir,'alignments']))
-    print("verified that output directories exist, created if needed") 
 
     #subset the bam files to the ones in the experiment list
     experiments_to_use=np.asarray(experiments.index)
@@ -59,7 +59,7 @@ def main():
     pool_args=[] 
     for experiment in experiments_to_use: 
         contributing_files=files[files['Dataset']==experiment]
-        pool_args.append([experiment,args.out_dir,contributing_files])
+        pool_args.append([experiment,args,contributing_files])
 
     downloads=pool.map(download_experiment,pool_args) 
     pool.close()
