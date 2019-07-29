@@ -11,7 +11,8 @@ def parse_args():
     parser.add_argument("--experiments_metadata")
     parser.add_argument("--files_metadata") 
     parser.add_argument("--out_dir") 
-    parser.add_argument("--threads",type=int,default=1) 
+    parser.add_argument("--threads",type=int,default=1)
+    parser.add_argument("--overwrite",action="store_true",default=False) 
     return parser.parse_args() 
 
 def download_experiment(inputs):
