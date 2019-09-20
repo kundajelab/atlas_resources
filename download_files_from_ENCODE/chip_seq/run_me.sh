@@ -23,7 +23,7 @@ cd ..
 #Get the line counts for the files, in order
 for path in `perl -lane 'if ($. > 1) {print($F[4])}' augmented_metadata_optimalidr_encodeprocessed_report.tsv`; do file=`basename $path`; lines=`zcat "data/"$file | wc -l`; echo $file" "$lines; done > file_line_counts
 paste augmented_metadata_optimalidr_encodeprocessed_report.tsv <(cat file_line_counts | perl -lane 'if ($. == 1) {print("linecount")} print $F[1]') > with_line_counts_augmented_metadata_optimalidr_encodeprocessed_report.tsv
-rm file_with_line_counts
+rm file_line_counts
 rm augmented_metadata_optimalidr_encodeprocessed_report.tsv
 
 mv data/* /oak/stanford/groups/akundaje/projects/atlas/chip
