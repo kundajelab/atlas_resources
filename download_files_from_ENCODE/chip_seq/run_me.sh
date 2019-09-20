@@ -6,7 +6,9 @@
 #assembly=GRCh38 and
 #format=bed
 
-curl -L "https://www.encodeproject.org/report.tsv?type=File&output_type=optimal+idr+thresholded+peaks&lab.title=ENCODE+Processing+Pipeline&status=released&assembly=GRCh38&file_format=bed&field=%40id&field=dataset&field=technical_replicates&field=biological_replicates&field=href&limit=all" > metadata_optimalidr_encodeprocessed_report.tsv
+#I think the API changed to become case sensitive; originally this had output_type=optimal+IDR+thresholded+peaks, but
+# that no longer works. Changing from idr to IDR works.
+curl -L "https://www.encodeproject.org/report.tsv?type=File&output_type=optimal+IDR+thresholded+peaks&lab.title=ENCODE+Processing+Pipeline&status=released&assembly=GRCh38&file_format=bed&field=%40id&field=dataset&field=technical_replicates&field=biological_replicates&field=href&limit=all" > metadata_optimalidr_encodeprocessed_report.tsv
 
 cat metadata_optimalidr_encodeprocessed_report.tsv | perl -lane 'BEGIN {use File::Basename} if ($. > 2) {print "wget https://www.encodeproject.org/".$F[4]." -O ".basename($F[4])}' > download_script.sh
 
