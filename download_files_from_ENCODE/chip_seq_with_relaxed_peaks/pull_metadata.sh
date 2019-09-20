@@ -9,7 +9,8 @@
 #assembly=GRCh38 and
 #format=bed
 
-curl -L "https://www.encodeproject.org/report.tsv?type=File&lab.title=ENCODE+Processing+Pipeline&status=released&assembly=GRCh38&field=%40id&field=accession&field=dataset&field=assembly&field=output_type&field=technical_replicates&field=biological_replicates&field=href&file_format=bed&output_type%21=peaks&output_type%21=conservative+idr+thresholded+peaks&output_type%21=replicated+peaks&output_type%21=sequence+alignability&output_type%21=methylation+state+at+CpG&output_type%21=methylation+state+at+CHH&output_type%21=methylation+state+at+CHG&output_type%21=enrichment&output_type%21=hotspots&output_type%21=pseudoreplicated+idr+thresholded+peaks&output_type%21=stable+peaks&output_type%21=transcription+start+sites" > unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp
+#Query has been updated to have case sensitivity...used to be "idr", but now has to be IDR
+curl -L "https://www.encodeproject.org/report.tsv?type=File&lab.title=ENCODE+Processing+Pipeline&status=released&assembly=GRCh38&field=%40id&field=accession&field=dataset&field=assembly&field=output_type&field=technical_replicates&field=biological_replicates&field=href&file_format=bed&output_type%21=peaks&output_type%21=conservative+IDR+thresholded+peaks&output_type%21=replicated+peaks&output_type%21=sequence+alignability&output_type%21=methylation+state+at+CpG&output_type%21=methylation+state+at+CHH&output_type%21=methylation+state+at+CHG&output_type%21=enrichment&output_type%21=hotspots&output_type%21=pseudoreplicated+IDR+thresholded+peaks&output_type%21=stable+peaks&output_type%21=transcription+start+sites" > unordered_metadata_optimalandrelaxedpeaks_encodeprocessed.temp
 
 #Go through a sorting step to make the order deterministic (it's not deterministic when pulled from web)
 #Also filter for files that don't use more than one biological replicate
