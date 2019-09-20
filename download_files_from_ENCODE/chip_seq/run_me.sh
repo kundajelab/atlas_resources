@@ -16,6 +16,7 @@ mkdir data
 cd data
 ln -s ../download_script.sh .
 bash download_script.sh
+cd ..
 
 ./augment_info.py
 
