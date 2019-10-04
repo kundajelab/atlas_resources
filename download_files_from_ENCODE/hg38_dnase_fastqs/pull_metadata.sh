@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# THE API DOCUMENTATION IS HERE https://app.swaggerhub.com/apis-docs/encodeproject/api/basic_search
 #Download a metadata tsv containing all ENCODE files where
 #status=released and
 #assembly=GRCh38 and
