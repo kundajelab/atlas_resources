@@ -37,7 +37,7 @@ def main():
             cur_json_dict['atac.pipeline_type']="dnase"
             cur_json_dict['atac.genome_tsv']=args.genome_tsv_for_pipeline
             cur_json_dict['atac.fastqs_rep1_R1']=[f_full_path]
-            cur_json_dict['atac.paired_ends']=False
+            cur_json_dict['atac.paired_ends']=[False]
             cur_json_dict['atac.enable_idr']=True
             cur_json_dict['atac.idr_thresh']=0.05
             cur_json_dict['atac.bowtie2_cpu']=8
