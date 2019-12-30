@@ -12,12 +12,12 @@ task=$5
 echo $task
 if [ "$single_multi" == "single" ];
 then
-    bash single/$train_predict/$classification_regression/$train_predict.singletask.$classification_regression.split$fold.sh $task
+    /root/scripts/single/$train_predict/$classification_regression/$train_predict.singletask.$classification_regression.split$fold.sh $task
 fi
 
 if [ "$single_multi" == "multi" ];
 then
-    bash multi/$train_predict/$classification_regression/$train_predict.multitask.$classification_regression.split$fold.sh
+    /root/scripts/multi/$train_predict/$classification_regression/$train_predict.multitask.$classification_regression.split$fold.sh
 fi
    
    

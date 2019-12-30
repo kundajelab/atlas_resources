@@ -1,6 +1,6 @@
 #!/bin/bash
 kerasAC_predict_tdb \
-    --batch_size 250 \
+    --batch_size 50 \
     --ref_fasta s3://encode-refs/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta \
     --tdb_indexer s3://encode-dnase-models/$1.task.tsv \
     --tdb_inputs seq \

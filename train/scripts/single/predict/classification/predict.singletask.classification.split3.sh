@@ -1,6 +1,6 @@
 #!/bin/bash
 kerasAC_predict_tdb \
-    --batch_size 250 \
+    --batch_size 50 \
     --ref_fasta s3://encode-refs/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta \
     --tdb_indexer s3://encode-dnase-models/$1.task.tsv \
     --tdb_inputs seq \
@@ -20,7 +20,7 @@ kerasAC_predict_tdb \
     --chrom_sizes s3://encode-refs/hg38.chrom.sizes \
     --upsample_ratio_list_predict 1 \
     --predictions_and_labels_hdf5 s3://encode-models/$1.classification.0 \
-    --load_model_hdf5 s3://encode-dnase-models/$1.regression.0.hdf5
+    --load_model_hdf5 s3://encode-dnase-models/$1.classification.0.hdf5
 
 
 		    

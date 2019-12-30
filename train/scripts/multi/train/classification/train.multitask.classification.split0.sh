@@ -18,7 +18,7 @@ kerasAC_train \
     --num_inputs 1 \
     --num_outputs 1 \
     --genome hg38 \
-    --fold 0 0 \
+    --fold 0 \
     --chrom_sizes s3://encode-refs/hg38.chrom.sizes \
     --upsample_ratio_list_train 0.7 \
     --upsample_ratio_list_eval 0.98 \
@@ -34,5 +34,5 @@ kerasAC_train \
     --model_prefix s3://encode-dnase-models/ENCODE.dnase.classification.0 \
     --architecture_spec functional_basset_classification_1D \
     --use_multiprocessing False \
-    --num_gpus 16
+    --num_gpus 8
 

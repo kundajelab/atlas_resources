@@ -1,6 +1,6 @@
 #!/bin/bash
 kerasAC_train \
-    --batch_size 250 \
+    --batch_size 50 \
     --ref_fasta s3://encode-refs/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta \
     --tdb_indexer s3://encode-dnase-models/$1.task.tsv \
     --tdb_partition_attribute_for_upsample idr_peak \
@@ -31,8 +31,8 @@ kerasAC_train \
     --max_queue_size 100 \
     --patience 3 \
     --patience_lr 2 \
-    --model_prefix s3://encode-dnase-models/$1.regression.0 \
-    --architecture_spec functional_basset_regression_1D \
+    --model_prefix s3://encode-dnase-models/$1.classification.0 \
+    --architecture_spec functional_basset_classification_1D \
     --use_multiprocessing False \
     --num_gpus 1 \
     --weights s3://encode-dnase-models/ENCODE.dnase.classification.0.weights

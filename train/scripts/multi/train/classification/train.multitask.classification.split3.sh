@@ -34,5 +34,5 @@ kerasAC_train \
     --model_prefix s3://encode-dnase-models/ENCODE.dnase.classification.0 \
     --architecture_spec functional_basset_classification_1D \
     --use_multiprocessing False \
-    --num_gpus 16
+    --num_gpus 8
 

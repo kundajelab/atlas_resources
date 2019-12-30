@@ -45,6 +45,7 @@ WORKDIR TileDB-Py
 RUN git checkout release-0.5.3
 RUN python setup.py build
 RUN python setup.py develop
+
 WORKDIR /root
 RUN git clone https://github.com/kundajelab/kerasAC.git
 WORKDIR kerasAC
@@ -54,3 +55,12 @@ RUN python setup.py develop
 WORKDIR /root
 COPY scripts/ scripts/
 RUN chmod -R +x scripts
+
+
+
+
+
+
+
+
+
