@@ -7,7 +7,7 @@ from io import BytesIO
 def parse_args():
     parser=argparse.ArgumentParser(description="generate igv session from list of bigwigs")
     parser.add_argument("--paths")
-    parser.add_argument("--outf")
+    parser.add_argument("--outf")        
     return parser.parse_args()
 
 def make_session():
@@ -16,7 +16,7 @@ def make_session():
     session.set('hasGeneTracks','true')
     session.set('hasSequenceTrack','true')
     session.set('locus','chr3:24704067-26618414')
-    session.set('nextAutoScaleGroup','5')
+    session.set('nextAutoscaleGroup','5')
     session.set("path","C:\\Users\\Anshul\\Desktop\\igv_session.xml")
     session.set("version","8") 
     return session
@@ -35,8 +35,8 @@ def main():
     data_panel.set("width","1901")
     for path in paths:
         track=ET.SubElement(data_panel,'Track')
-        track.set('autoScale','False')
-        track.set('autoScaleGroup','4')
+        track.set('autoScale','false')
+        track.set('autoscaleGroup','4')
         track.set('clazz',"org.broad.igv.track.DataSourceTrack")
         track.set('fontSize','10')
         track.set('id',path)
@@ -49,9 +49,9 @@ def main():
         data_range.set('baseline','0.0')
         data_range.set('drawBaseline','true')
         data_range.set('flipAxis','false')
-        data_range.set('maximum','67')
-        data_range.set('minimum','0')
-        data_range.set('type','linear')
+        data_range.set('maximum','67.0')
+        data_range.set('minimum','0.0')
+        data_range.set('type','LINEAR')
     feature_panel=ET.SubElement(session,'Panel')
     feature_panel.set('height','99')
     feature_panel.set('name','FeaturePanel')
