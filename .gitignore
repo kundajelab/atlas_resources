@@ -1,1 +1,7 @@
 tiledb_inputs/encode.dnase.tasks.*
+*hdf5
+*tsv
+*log
+*arch
+*weights
+*log
