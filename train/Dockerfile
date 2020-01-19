@@ -52,9 +52,12 @@ WORKDIR kerasAC
 RUN python setup.py build
 RUN python setup.py develop
 
+
 WORKDIR /root
 COPY scripts/ scripts/
 RUN chmod -R +x scripts
+
+
 
 
 

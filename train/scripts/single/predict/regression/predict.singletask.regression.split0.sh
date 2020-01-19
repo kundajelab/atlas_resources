@@ -20,7 +20,7 @@ kerasAC_predict_tdb \
     --chrom_sizes s3://encode-refs/hg38.chrom.sizes \
     --upsample_ratio_list_predict 1 \
     --predictions_and_labels_hdf5 s3://encode-models/predictions.ENCODE.dnase.regression.0 \
-    --load_model_hdf5 s3://encode-dnase-models/ENCODE.dnase.regression.0.hdf5
+    --load_model_hdf5 s3://encode-dnase-models/$1.regression.0.hdf5
 
 
 		    

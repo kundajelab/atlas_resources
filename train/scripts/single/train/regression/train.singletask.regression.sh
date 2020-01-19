@@ -1,4 +1,6 @@
 #!/bin/bash
+#$1 = task
+#$2 = fold 
 kerasAC_train \
     --batch_size 50 \
     --ref_fasta s3://encode-refs/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta \
@@ -18,7 +20,7 @@ kerasAC_train \
     --num_inputs 1 \
     --num_outputs 1 \
     --genome hg38 \
-    --fold 2 \
+    --fold $2 \
     --chrom_sizes s3://encode-refs/hg38.chrom.sizes \
     --upsample_ratio_list_train 0.7 \
     --upsample_ratio_list_eval 0.98 \
@@ -31,9 +33,9 @@ kerasAC_train \
     --max_queue_size 100 \
     --patience 3 \
     --patience_lr 2 \
-    --model_prefix s3://encode-dnase-models/$1.regression.0 \
+    --model_prefix s3://encode-dnase-models/$1.regression.$2 \
     --architecture_spec functional_basset_regression_1D \
     --use_multiprocessing False \
     --num_gpus 1 \
-    --weights s3://encode-dnase-models/ENCODE.dnase.regression.0.weights
+    --weights s3://encode-dnase-models/ENCODE.dnase.regression.$2.weights
 

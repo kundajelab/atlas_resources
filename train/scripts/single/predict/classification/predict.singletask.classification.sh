@@ -1,4 +1,6 @@
 #!/bin/bash
+#$1 task
+#$2 fold 
 kerasAC_predict_tdb \
     --batch_size 50 \
     --ref_fasta s3://encode-refs/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta \
@@ -11,16 +13,17 @@ kerasAC_predict_tdb \
     --tdb_outputs s3://encode-dnase-models/$1.task.tsv \
     --tdb_output_source_attribute idr_peak \
     --tdb_output_flank 100 \
-    --tdb_output_aggregation max \
+    --tdb_output_aggregation binary_max \
     --tdb_output_transformation None \
     --num_inputs 1 \
     --num_outputs 1 \
     --tiledb_stride 50 \
-    --genome hg38 --fold 5 \
+    --genome hg38 \
+    --fold $2 \
     --chrom_sizes s3://encode-refs/hg38.chrom.sizes \
     --upsample_ratio_list_predict 1 \
-    --predictions_and_labels_hdf5 s3://encode-models/$1.classification.0 \
-    --load_model_hdf5 s3://encode-dnase-models/$1.classification.0.hdf5
+    --predictions_and_labels_hdf5 s3://encode-models/$1.classification.$2 \
+    --load_model_hdf5 s3://encode-dnase-models/$1.classification.$2.hdf5
 
 
 		    
