@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import tiledb 
 import random 
-import timeit
+import time
 
 #set random seed
 random.seed(1234)
@@ -65,18 +65,32 @@ def main():
     print("generated batch of coordinates to use in queries")
     
     #open remote tiledb instance
+    t0=time.time() 
     tdb_instance_remote=open_tdb_remote(task,chrom,ctx)
-    print("opened remote tdb") 
-    #query batch of data from open remote tdb 
-    timeit.timeit(batch_from_tdb_remote=query_tdb(tdb_instance_remote,regions,batch_size,vector_length,attribute_of_interest),number=5)
-    print("queried remote tdb")
+    t1=time.time()
+    delta1=(t1-t0)*1000
+    print("opened remote tdb: "+str(delta1)+ "ms")
+    
+    #query batch of data from open remote tdb
+    t2=time.time() 
+    batch_remote=query_tdb(tdb_instance_remote,regions,batch_size,vector_length,attribute_of_interest)
+    t3=time.time()
+    delta2=(t3-t2)*1000 #milliseconds 
+    print("queried remote tdb: "+str(delta2) +" ms")
     
     #open local tiledb instance
+    t4=time.time() 
     tdb_instance_local=open_tdb_local(task,chrom,ctx)
-    print("opened local tdb") 
+    t5=time.time()
+    delta3=(t5-t4)*1000
+    print("opened local tdb: "+str(delta3)+" ms")
+    
     #query batch of data from open local tiledb
-    timeit.timeit(batch_from_tdb_local=query_tdb(tdb_instance_local,regions,batch_size,vector_length,attribute_of_interest),number=5)
-    print("queried local tdb") 
+    t6=time.time()
+    batch_local=query_tdb(tdb_instance_local,regions,batch_size,vector_length,attribute_of_interest)
+    t7=time.time()
+    delta4=(t7-t6)*1000
+    print("queried local tdb: "+str(delta4)+" ms") 
 
 if __name__=="__main__":
     main()
