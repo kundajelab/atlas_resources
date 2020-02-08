@@ -1,0 +1,1 @@
+make_tracks_file --trackFiles gencode.v33.annotation.gtf.gz RepeatMasker.hg38.bed.gz /oak/stanford/groups/akundaje/projects/atlas/bigwigs/pval/ENCSR986YWZ.merged.nodup.pval.signal.bigwig /oak/stanford/groups/akundaje/projects/atlas/bigwigs/pval/ENCSR251UPG.merged.nodup.pval.signal.bigwig  -o tracks.small.ini
