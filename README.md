@@ -1,5 +1,5 @@
 
-#ENCODE DNASE 
+# ENCODE DNASE 
 
 The outputs are found here: 
 
@@ -9,7 +9,7 @@ The map of pipeline hash to ENCODE ID is here:
 
 `/oak/stanford/groups/akundaje/projects/atlas/dnase_processed/processed_all.txt`
 
-##pipeline outputs ## 
+## pipeline outputs
 * bowtie2_bams.txt -- unfiltered bam files 
 * fc_bigwig -- fold change bigwigs
 * pval_bigwig -- pval bigwigs 
