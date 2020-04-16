@@ -9,6 +9,5 @@ do
     idr_peaks=`head -n$i $idr_peak_files | tail -n1`
     overlap_peaks=`head -n$i $overlap_peak_files | tail -n1`
     jobname=`basename $idr_peaks`
-    sbatch -J $jobname -e logs/$jobname.e -o logs/$jobname.o -p euan,akundaje,owners get_ambiguous_tracks.sh $idr_peaks $overlap_peaks 
-    #./get_ambiguous_tracks.sh $idr_peaks $overlap_peaks 
+    sbatch -J $jobname -e logs/$jobname.$i.e -o logs/$jobname.$i.o -p euan,akundaje,owners,normal get_ambiguous_tracks.sh $idr_peaks $overlap_peaks 
 done
