@@ -2,7 +2,7 @@ import argparse
 import pdb 
 import pandas as pd
 #order of tasks is fixed 
-fields=['fc_bigwig','pval_bigwig','idr_peak','overlap_peak','ambig_peak','count_bigwig_plus_5p','count_bigwig_minus_5p']
+fields=['fc_bigwig','pval_bigwig','idr_peak','overlap_peak','ambig_peak','count_bigwig_plus_5p','count_bigwig_minus_5p','count_bigwig_unstranded_5p']
 def parse_args():
     parser=argparse.ArgumentParser(description="form tiledb metadata")
     parser.add_argument("--fc_bigwig",default=None)
@@ -12,6 +12,7 @@ def parse_args():
     parser.add_argument("--ambig_peak",default=None)
     parser.add_argument("--count_bigwig_plus_5p",default=None)
     parser.add_argument("--count_bigwig_minus_5p",default=None)
+    parser.add_argument("--count_bigwig_unstranded_5p",default=None)
     parser.add_argument("--id_to_task",help="2-column file, the first column contains the pipeline id, the 2nd column containsn the ENCODE identifier (task name)")
     parser.add_argument("--outf")
     parser.add_argument("--split_tasks_to_separate_files",action="store_true",default=False)
@@ -71,10 +72,12 @@ def main():
     #print("parsed fc_bigwig") 
     task_dict=get_field_dict('pval_bigwig',args.pval_bigwig,task_dict,id_to_task)
     #print("parsed pval_bigwig")
-    task_dict=get_field_dict('count_bigwig_plus_5p',args.count_bigwig_minus_5p,task_dict,id_to_task)
+    task_dict=get_field_dict('count_bigwig_plus_5p',args.count_bigwig_plus_5p,task_dict,id_to_task)
     #print("parsed count_bigwig_plus_5p") 
     task_dict=get_field_dict('count_bigwig_minus_5p',args.count_bigwig_minus_5p,task_dict,id_to_task)
     #print("parsed count_bigwig_minus_5p")
+    task_dict=get_field_dict('count_bigwig_unstranded_5p',args.count_bigwig_unstranded_5p,task_dict,id_to_task)
+    #print("parsed count_bigwig_unstranded_5p")
     task_dict=get_field_dict('idr_peak',args.idr_peak,task_dict,id_to_task)
     #print("parsed idr_peak") 
     task_dict=get_field_dict('overlap_peak',args.overlap_peak,task_dict,id_to_task)
