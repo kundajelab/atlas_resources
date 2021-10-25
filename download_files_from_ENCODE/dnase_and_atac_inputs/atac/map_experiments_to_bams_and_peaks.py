@@ -5,7 +5,7 @@ def parse_args():
     parser=argparse.ArgumentParser(description="map ENCODE experiment filtered bams --> overlap peaks --> idr peaks")
     parser.add_argument("--experiment_file",default="/oak/stanford/groups/akundaje/projects/atlas/atac/input/ATAC_experiments.tsv")
     parser.add_argument("--filtered_bams_file",default="/oak/stanford/groups/akundaje/projects/atlas/atac/input/all.filtered_bams.txt")
-    parser.add_argument("--overlap_peaks_file",default="/oak/stanford/groups/akundaje/projects/atlas/atac/input/overlap_files.txt")
+    parser.add_argument("--overlap_peaks_file",default="files_narrowPeak.tsv")
     parser.add_argument("--idr_peaks_file",default="/oak/stanford/groups/akundaje/projects/atlas/atac/input/idr_files.txt")
     parser.add_argument("--outf",default="/oak/stanford/groups/akundaje/projects/atlas/atac/input/experiment_to_file_types.txt")
     return parser.parse_args()
@@ -22,9 +22,16 @@ def main():
     for filtered_bam_file in filtered_bam_files:
         filtered_bam_dict[filtered_bam_file.split('/')[-1].split('.')[0]]=1
 
-    overlap_peak_files=open(args.overlap_peaks_file,'r').read().strip().split('\n')
-    for overlap_peak_file in overlap_peak_files[1::]:
-        overlap_peak_dict[overlap_peak_file.split('/')[-1].split('.')[0]]=1         
+    overlap_peaks=pd.read_csv(args.overlap_peaks_file,header=0,skiprows=1,sep='\t')
+    overlap_peaks=overlap_peaks[overlap_peaks["Preferred Default"]==True]
+    for index,row in overlap_peaks.iterrows():
+        experiment=row['Dataset'].replace('/experiments/','').replace('/','')
+        cur_file=row['ID'].replace("/files/","").replace('/','') 
+        overlap_peak_dict[cur_file]=1
+    
+    #overlap_peak_files=open(args.overlap_peaks_file,'r').read().strip().split('\n')
+    #for overlap_peak_file in overlap_peak_files[1::]:
+    #    overlap_peak_dict[overlap_peak_file.split('/')[-1].split('.')[0]]=1         
 
     idr_peak_files=open(args.idr_peaks_file,'r').read().strip().split('\n')
     for idr_peak_file in idr_peak_files[1::]:
@@ -33,6 +40,8 @@ def main():
     experiments=pd.read_csv(args.experiment_file,header=0,skiprows=1,sep='\t')
     outf=open(args.outf,'w')
     outf.write('Experiment\tFilteredBams\tOverlapPeaks\tIDRPeaks\n')
+    #import pdb
+    #pdb.set_trace() 
     for index,row in experiments.iterrows():
         experiment=row['Accession']
         files=row['Files'].replace('/','').replace('files','').split(',')
